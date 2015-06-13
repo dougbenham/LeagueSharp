@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using LeagueSharp;
+using LeagueSharp.Common;
 using SharpDX.Direct3D9;
 
 namespace ItemNotification
 {
     class NotificationManager
     {
-        private static readonly int max = 4;
         private static readonly bool drawInEndScene = true; // false to use OnDraw
         private static readonly List<Notification> notifications = new List<Notification>();
         private static readonly List<Notification> queue = new List<Notification>();
@@ -61,10 +61,10 @@ namespace ItemNotification
             }
         }
 
-        public static Notification AddNotification(Texture texture, string text, int duration = -1)
+        public static Notification AddNotification(Texture heroTexture, Texture itemTexture, string text, int duration = -1)
         {
-            var notification = new Notification(texture, text, duration);
-            if (notifications.Count >= max)
+            var notification = new Notification(heroTexture, itemTexture, text, duration);
+            if (notifications.Count >= Program.NotificationsMenu.Item("Max").GetValue<Slider>().Value)
                 queue.Add(notification);
             else
             {
@@ -81,7 +81,7 @@ namespace ItemNotification
 
         public static bool RemoveNotification(Notification notification)
         {
-            if (notifications.Count == max && queue.Count > 0)
+            if (notifications.Count == Program.NotificationsMenu.Item("Max").GetValue<Slider>().Value && queue.Count > 0)
             {
                 notifications.Add(queue[0]);
                 queue[0].Show();

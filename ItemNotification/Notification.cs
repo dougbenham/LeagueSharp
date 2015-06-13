@@ -8,10 +8,44 @@ namespace ItemNotification
 {
     class Notification
     {
-        /// <param name="duration">Duration (-1 for Infinite)</param>
-        public Notification(Texture texture, string text, int duration)
+        public static bool DisplayItemName
         {
-            Texture = texture;
+            get { return Program.NotificationsMenu.Item("DisplayItemName").GetValue<bool>(); }
+        }
+
+        public static int TextWidth
+        {
+            get { return Program.NotificationsMenu.Item("TextWidth").GetValue<Slider>().Value; }
+        }
+
+        public static int TextureWidth
+        {
+            get { return Program.NotificationsMenu.Item("TextureWidth").GetValue<Slider>().Value; }
+        }
+
+        public static int TextureHeight
+        {
+            get { return Program.NotificationsMenu.Item("TextureHeight").GetValue<Slider>().Value; }
+        }
+
+        public static int BorderWidth
+        {
+            get { return Program.NotificationsMenu.Item("BorderWidth").GetValue<Slider>().Value; }
+        }
+
+        public static int Width
+        {
+            get { return TextureWidth * 2 + BorderWidth * 2 + (DisplayItemName ? TextWidth : 0); }
+        }
+
+        /// <param name="heroTexture"></param>
+        /// <param name="itemTexture"></param>
+        /// <param name="text"></param>
+        /// <param name="duration">Duration (-1 for Infinite)</param>
+        public Notification(Texture heroTexture, Texture itemTexture, string text, int duration)
+        {
+            HeroTexture = heroTexture;
+            ItemTexture = itemTexture;
             Text = text;
             this.duration = duration;
             TextColor.A = 0xFF;
@@ -39,7 +73,7 @@ namespace ItemNotification
 
         private float CalculateVerticalOffset()
         {
-            return NotificationManager.GetNotificationIndex(this) * Height + VerticalOffset;
+            return NotificationManager.GetNotificationIndex(this) * Height;
         }
 
         private static Vector2[] GetLine(float x1, float y1, float x2, float y2)
@@ -51,45 +85,28 @@ namespace ItemNotification
 
         #region Public Fields
 
-        /// <summary>
-        ///     Notification's Picture
-        /// </summary>
-        public Texture Texture;
+        public Texture HeroTexture;
+        public Texture ItemTexture;
 
-        /// <summary>
-        ///     Notification's Text
-        /// </summary>
         public string Text;
 
-        /// <summary>
-        ///     Indicates if notification is going to be deleted
-        /// </summary>
         public bool Delete { get; set; }
-
-        public static float Width = 300f;
-
+        
         public static float Height
         {
-            get { return TextureHeight + 2; }
+            get { return TextureHeight + BorderWidth * 2; }
         }
 
         public float TextXOffset
         {
             get
             {
-                return Texture == null ? 0 : TextureWidth - 1;
+                var x = 0;
+                if (HeroTexture != null) x += TextureWidth - 1;
+                if (ItemTexture != null) x += TextureWidth - 1;
+                return x;
             }
         }
-
-        public float TextWidth
-        {
-            get { return Width - TextXOffset; }
-        }
-
-        public float VerticalOffset = 0;
-
-        public static int TextureWidth = 32;
-        public static int TextureHeight = 32;
 
         #region Colors
 
@@ -169,25 +186,22 @@ namespace ItemNotification
         {
             if (Delete) return;
 
-            #region Box
+            #region Outline
 
             line.Width = Width;
 
             line.Begin();
-            line.Draw(GetLine(position.X + Width / 2, position.Y, position.X + Width / 2, position.Y + Height), BoxColor);
+            line.Draw(GetLine(position.X + Width / 2.0f, position.Y, position.X + Width / 2.0f, position.Y + Height), BorderColor);
             line.End();
 
             #endregion
 
-            #region Outline
+            #region Box
 
-            line.Width = 1;
+            line.Width = Width - BorderWidth * 2;
 
             line.Begin();
-            line.Draw(GetLine(position.X, position.Y, position.X + Width, position.Y), BorderColor); // TOP
-            line.Draw(GetLine(position.X, position.Y, position.X, position.Y + Height), BorderColor); // LEFT
-            line.Draw(GetLine(position.X + Width, position.Y, position.X + Width, position.Y + Height), BorderColor); // RIGHT
-            line.Draw(GetLine(position.X, position.Y + Height, position.X + Width, position.Y + Height), BorderColor); // BOTTOM
+            line.Draw(GetLine(position.X + Width / 2.0f, position.Y + BorderWidth, position.X + Width / 2.0f, position.Y + Height - BorderWidth), BoxColor);
             line.End();
 
             #endregion
@@ -196,44 +210,55 @@ namespace ItemNotification
 
             #region Picture
 
-            if (Texture != null)
+            if (HeroTexture != null)
             {
                 var tmp = sprite.Transform;
-                sprite.Transform = Matrix.Translation(position.X + 1, position.Y + 1, 0);
-                sprite.Draw(Texture, PictureColor);
+                sprite.Transform = Matrix.Translation(position.X + BorderWidth, position.Y + BorderWidth, 0);
+                sprite.Draw(HeroTexture, PictureColor);
+                sprite.Transform = tmp;
+            }
+
+            if (ItemTexture != null)
+            {
+                var tmp = sprite.Transform;
+                sprite.Transform = Matrix.Translation(position.X + BorderWidth + TextureWidth, position.Y + BorderWidth, 0);
+                sprite.Draw(ItemTexture, PictureColor);
                 sprite.Transform = tmp;
             }
 
             #endregion
 
             #region Text
-            
-            var textDimension = Font.MeasureText(sprite, Text);
-            var finalText = Text;
 
-            if (textDimension.Width + 5 > TextWidth)
+            if (DisplayItemName)
             {
-                for (var i = Text.Length - 1; i > 3; --i)
-                {
-                    var text = Text.Substring(0, i);
-                    var textWidth = Font.MeasureText(sprite, text).Width;
+                var textDimension = Font.MeasureText(sprite, Text);
+                var finalText = Text;
 
-                    if (textWidth + 5 <= TextWidth || i == 4)
+                if (textDimension.Width + 5 > TextWidth)
+                {
+                    for (var i = Text.Length - 1; i > 3; --i)
                     {
-                        finalText = text.Substring(0, text.Length - 3) + "...";
-                        break;
+                        var text = Text.Substring(0, i);
+                        var textWidth = Font.MeasureText(sprite, text).Width;
+
+                        if (textWidth + 5 <= TextWidth || i == 4)
+                        {
+                            finalText = text.Substring(0, text.Length - 3) + "...";
+                            break;
+                        }
                     }
                 }
+
+                textDimension = Font.MeasureText(sprite, finalText);
+
+                var rectangle = new Rectangle((int) (position.X + TextXOffset), (int) position.Y, (int) TextWidth, (int) Height);
+
+                Font.DrawText(
+                    sprite, finalText, rectangle.TopLeft.X + (rectangle.Width - textDimension.Width) / 2,
+                    rectangle.TopLeft.Y + (rectangle.Height - textDimension.Height) / 2, TextColor);
             }
 
-            textDimension = Font.MeasureText(sprite, finalText);
-
-            var rectangle = new Rectangle((int)(position.X + TextXOffset), (int)position.Y, (int)TextWidth, (int)Height);
-
-            Font.DrawText(
-                sprite, finalText, rectangle.TopLeft.X + (rectangle.Width - textDimension.Width) / 2,
-                rectangle.TopLeft.Y + (rectangle.Height - textDimension.Height) / 2, TextColor);
-            
             #endregion
 
             sprite.End();
