@@ -55,7 +55,7 @@ namespace ItemNotification
             var texture = Texture.FromMemory(
                     Drawing.Direct3DDevice, (byte[])new ImageConverter().ConvertTo(bitmap, typeof(byte[])), bitmap.Width, bitmap.Height, 0,
                     Usage.None, Format.A1, Pool.Managed, Filter.Default, Filter.Default, 0);
-            NotificationManager.AddNotification(texture, "Test", 5000).BoxColor = new ColorBGRA(0x70, 0, 0, 0xff);*/
+            NotificationManager.AddNotification(texture, "Infinity Edge", 5000).BoxColor = new ColorBGRA(0x70, 0, 0, 0xff);*/
 
             foreach (var hero in HeroManager.AllHeroes.Where(hero => hero.IsValid && hero.IsVisible && !hero.IsMe))
                 AddPlayer(hero);
