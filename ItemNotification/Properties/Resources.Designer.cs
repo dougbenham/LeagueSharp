@@ -2023,6 +2023,16 @@ namespace ItemNotification.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap _3285 {
+            get {
+                object obj = ResourceManager.GetObject("_3285", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap _3290 {
             get {
                 object obj = ResourceManager.GetObject("_3290", resourceCulture);
@@ -2416,6 +2426,16 @@ namespace ItemNotification.Properties {
         internal static System.Drawing.Bitmap _3726 {
             get {
                 object obj = ResourceManager.GetObject("_3726", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap _3751 {
+            get {
+                object obj = ResourceManager.GetObject("_3751", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

@@ -20,6 +20,7 @@ namespace ItemNotification
 
     class Program
     {
+
         private static ConcurrentDictionary<int, Texture> itemTexture;
         private static ConcurrentDictionary<int, Texture> playerTexture;
         private static ConcurrentDictionary<int, List<Item>> playerItems;
@@ -41,15 +42,33 @@ namespace ItemNotification
                 texture.Dispose();
         }
 
+        static Texture CreateTextureFromItemId(int id, int width, int height)
+        {
+            var texture = CreateTextureFromResource("_" + id, width, height);
+            if (texture != null)
+                return texture;
+
+            var bitmap = DataDragon.GetItemBitmap(id);
+            if (bitmap != null)
+                return CreateTextureFromBitmap(bitmap, width, height);
+
+            return null;
+        }
+
+        static Texture CreateTextureFromBitmap(Bitmap bitmap, int width, int height)
+        {
+            bitmap = bitmap.Resize(width, height);
+            return Texture.FromMemory(
+                    Drawing.Direct3DDevice, (byte[])new ImageConverter().ConvertTo(bitmap, typeof(byte[])), bitmap.Width, bitmap.Height, 0,
+                    Usage.None, Format.A1, Pool.Managed, Filter.Default, Filter.Default, 0);
+        }
+
         static Texture CreateTextureFromResource(string name, int width, int height)
         {
             var bitmap = (Resources.ResourceManager.GetObject(name) as Bitmap);
             if (bitmap == null) return null;
 
-            bitmap = bitmap.Resize(width, height);
-            return Texture.FromMemory(
-                    Drawing.Direct3DDevice, (byte[])new ImageConverter().ConvertTo(bitmap, typeof(byte[])), bitmap.Width, bitmap.Height, 0,
-                    Usage.None, Format.A1, Pool.Managed, Filter.Default, Filter.Default, 0);
+            return CreateTextureFromBitmap(bitmap, width, height);
         }
 
         static void AddPlayer(Obj_AI_Hero hero)
@@ -64,7 +83,7 @@ namespace ItemNotification
                 return itemTexture[id];
             else
             {
-                var texture = CreateTextureFromResource("_" + id, Notification.TextureWidth, Notification.TextureHeight);
+                var texture = CreateTextureFromItemId(id, Notification.TextureWidth, Notification.TextureHeight);
                 itemTexture.TryAdd(id, texture);
                 return texture;
             }
@@ -120,9 +139,9 @@ namespace ItemNotification
                 var color = MonitorMenu.Item("Self").GetValue<Circle>().Color;
                 NotificationManager.AddNotification(texture, GetItemTexture((int)ItemId.Infinity_Edge), "Self", NotificationsMenu.Item("Delay").GetValue<Slider>().Value).BorderColor = new ColorBGRA(color.R, color.G, color.B, 0xff);
                 color = MonitorMenu.Item("Allies").GetValue<Circle>().Color;
-                NotificationManager.AddNotification(texture, GetItemTexture((int)ItemId.The_Bloodthirster), "Ally", NotificationsMenu.Item("Delay").GetValue<Slider>().Value).BorderColor = new ColorBGRA(color.R, color.G, color.B, 0xff);
+                NotificationManager.AddNotification(texture, GetItemTexture(3751), "Ally", NotificationsMenu.Item("Delay").GetValue<Slider>().Value).BorderColor = new ColorBGRA(color.R, color.G, color.B, 0xff);
                 color = MonitorMenu.Item("Enemies").GetValue<Circle>().Color;
-                NotificationManager.AddNotification(texture, GetItemTexture((int)ItemId.The_Bloodthirster), "Enemy", NotificationsMenu.Item("Delay").GetValue<Slider>().Value).BorderColor = new ColorBGRA(color.R, color.G, color.B, 0xff);
+                NotificationManager.AddNotification(texture, GetItemTexture(3285), "Enemy", NotificationsMenu.Item("Delay").GetValue<Slider>().Value).BorderColor = new ColorBGRA(color.R, color.G, color.B, 0xff);
             }
             foreach (var hero in HeroManager.AllHeroes.Where(hero => hero.IsValid && hero.IsVisible))
             {

@@ -51,6 +51,7 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -59,6 +60,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BitmapExtensions.cs" />
+    <Compile Include="DataDragon\DataDragon.cs" />
+    <Compile Include="DataDragon\JSON.cs" />
     <Compile Include="Notification.cs" />
     <Compile Include="NotificationManager.cs" />
     <Compile Include="Program.cs" />
@@ -394,6 +397,7 @@
     <Content Include="Items\3282.png" />
     <Content Include="Items\3283.png" />
     <Content Include="Items\3284.png" />
+    <Content Include="Items\3285.png" />
     <Content Include="Items\3290.png" />
     <Content Include="Items\3301.png" />
     <Content Include="Items\3302.png" />
@@ -434,6 +438,7 @@
     <Content Include="Items\3724.png" />
     <Content Include="Items\3725.png" />
     <Content Include="Items\3726.png" />
+    <Content Include="Items\3751.png" />
     <Content Include="Items\3800.png" />
     <Content Include="Items\3801.png" />
   </ItemGroup>
