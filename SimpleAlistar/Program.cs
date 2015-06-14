@@ -6,8 +6,8 @@ namespace SimpleAlistar
 {
     class Program
     {
-        private Menu menu, drawingMenu, keyMenu;
-        private Spell Q, W, E, R;
+        private Menu menu;
+        private Spell Q, W, E;
 
         static void Main(string[] args)
         {
@@ -26,7 +26,6 @@ namespace SimpleAlistar
             Q = new Spell(SpellSlot.Q, 365);
             W = new Spell(SpellSlot.W, 650);
             E = new Spell(SpellSlot.E, 575);
-            R = new Spell(SpellSlot.R, 0);
 
             W.SetTargetted(0.5f, float.MaxValue);
 
