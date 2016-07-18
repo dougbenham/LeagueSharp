@@ -27,7 +27,7 @@ namespace SimpleAlistar
             W = new Spell(SpellSlot.W, 650);
             E = new Spell(SpellSlot.E, 575);
 
-            W.SetTargetted(0.5f, float.MaxValue);
+            //W.SetTargetted(0.5f, float.MaxValue);
 
             menu = new Menu("Simple Alistar", "SimpleAlistar", true);
             menu.AddItem(new MenuItem("DrawQ", "Draw Q Range").SetValue(new Circle(true, System.Drawing.Color.Red)));
@@ -49,7 +49,8 @@ namespace SimpleAlistar
                 if (Q.IsReady() && W.IsReady() && target.IsValidTarget(W.Range))
                 {
                     W.CastOnUnit(target);
-                    var jumpTime = Math.Max(0, ObjectManager.Player.Distance(target) - 500) * 10 / 25 + 25;
+                    //var jumpTime = Math.Max(0, ObjectManager.Player.Distance(target) - 500) * 10 / 25 + 25;
+                    var jumpTime = Math.Max(0, ObjectManager.Player.Distance(target) - 365) / 1.2f - 25;
                     Utility.DelayAction.Add((int) jumpTime, () => Q.Cast());
                 }
             }
