@@ -74,26 +74,38 @@ namespace FastTrundle
 
                 if (allowQAfterAA && !(args.Target is Obj_AI_Turret || args.Target is Obj_Barracks || args.Target is Obj_BarracksDampener || args.Target is Obj_Building) && spells[Spells.Q].IsReady())
                 {
-                    spells[Spells.Q].Cast();
-                    Orbwalking.ResetAutoAttackTimer();
+                    Utility.DelayAction.Add(50, () => 
+                    {
+                        spells[Spells.Q].Cast();
+                        Orbwalking.ResetAutoAttackTimer();
+                    });
                     return;
                 }
                 if (allowItemsAfterAA && IsActive("FastTrundle.Items.Titanic") && Items.HasItem(3748) && Items.CanUseItem(3748)) // Titanic
                 {
-                    Items.UseItem(3748);
-                    Orbwalking.ResetAutoAttackTimer();
+                    Utility.DelayAction.Add(50, () => 
+                    {
+                        Items.UseItem(3748);
+                        Orbwalking.ResetAutoAttackTimer();
+                    });
                     return;
                 }
                 if (allowItemsAfterAA && IsActive("FastTrundle.Items.Hydra") && Items.HasItem(3077) && Items.CanUseItem(3077))
                 {
-                    Items.UseItem(3077);
-                    Orbwalking.ResetAutoAttackTimer();
+                    Utility.DelayAction.Add(50, () => 
+                    {
+                        Items.UseItem(3077);
+                        Orbwalking.ResetAutoAttackTimer();
+                    });
                     return;
                 }
                 if (allowItemsAfterAA && IsActive("FastTrundle.Items.Hydra") && Items.HasItem(3074) && Items.CanUseItem(3074))
                 {
-                    Items.UseItem(3074);
-                    Orbwalking.ResetAutoAttackTimer();
+                    Utility.DelayAction.Add(50, () => 
+                    {
+                        Items.UseItem(3074);
+                        Orbwalking.ResetAutoAttackTimer();
+                    });
                     return;
                 }
             }
