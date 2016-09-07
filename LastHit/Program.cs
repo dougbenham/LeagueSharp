@@ -48,6 +48,13 @@ namespace LastHit
 
         private static void Drawing_OnDraw(EventArgs args)
         {
+            
+            /*var buff = ObjectManager.Player.Buffs.FirstOrDefault(buff2 => buff2.Name == "talentreaperdisplay");
+            if (buff != null)
+            {
+                Drawing.DrawText(20, 20, Color.White, "Targon stacks: " + buff.Count + ", " + buff.IsActive + ", " + buff.IsPositive + ", " + buff.IsValid + " - Can use targon item: " + Items.CanUseItem(3302).ToString());
+            }*/
+
             // TODO: Add renekton
 
             bool aa = false;
@@ -62,11 +69,13 @@ namespace LastHit
                     onhit = true;
                     spell = SpellSlot.Q;
                     break;
+                case "LeBlanc":
                 case "Caitlyn":
                 case "MasterYi":
                 case "Pantheon":
                 case "Riven":
                 case "Warwick":
+                case "Teemo":
                     aa = false;
                     onhit = false;
                     spell = SpellSlot.Q;
